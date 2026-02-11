@@ -1,11 +1,20 @@
 from contextlib import asynccontextmanager
-import uvicorn
 
+import uvicorn
+from app.api.report_api import router
 from fastapi import FastAPI
 
+from app.initial_sample_data import initialize_sample_data
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await initialize_sample_data()
+    yield
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Test", version="0.1.0")
+    app = FastAPI(lifespan=lifespan, title="Test", version="0.1.0")
+    app.include_router(router, prefix="/api/v1")
     return app
 
 

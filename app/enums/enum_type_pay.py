@@ -1,6 +1,18 @@
-import enum
+from enum import Enum
 
 
-class TypePayEnum(enum.Enum):
-    payment = "payment"
-    invoice = "invoice"
+class PayEnum:
+    PAYMENT = "payment"
+    INVOICE = "invoice"
+    ALL = "all"
+
+
+class TypePayEnum(str, Enum):
+    PAYMENT = PayEnum.PAYMENT
+    INVOICE = PayEnum.INVOICE
+
+
+class APITypePayEnum(str, Enum):
+    PAYMENT = PayEnum.PAYMENT
+    INVOICE = PayEnum.INVOICE
+    ALL = PayEnum.ALL

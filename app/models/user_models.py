@@ -15,5 +15,5 @@ class UserModel(BaseModel):
     # Relationships
     transactions: Mapped[list["TransactionModel"]] = relationship(
         back_populates="user",
-        cascade="all, delete-orphan"  # опционально: каскадное удаление
+        cascade="all, delete-orphan"
     )
