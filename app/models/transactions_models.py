@@ -2,7 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Enum, Integer, ForeignKey, DECIMAL, DateTime
+from sqlalchemy import Enum, Integer, ForeignKey, DECIMAL, DateTime, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.enums.enum_status import TypeStatusEnum
@@ -24,3 +24,10 @@ class TransactionModel(BaseModel):
 
     # Relationships
     user: Mapped["UserModel"] = relationship(back_populates="transactions")
+
+    __table_args__ = (
+        Index('idx_transactions_status_type_date_user', 'status', 'type', 'date_pay', 'user_id'),
+        Index('idx_transactions_user_id', 'user_id'),
+        Index('idx_transactions_date_pay', 'date_pay'),
+        Index('idx_transactions_sum_pay', 'sum_pay'),
+    )

@@ -16,7 +16,22 @@ async def register_user(
         report_serv: Annotated[ReportServices, Depends(report_services)],
         trans_filter: TransactionFilter = Depends(),
 ):
-    """Получение репорта"""
+    """
+    Получение аналитики по транзакциям.
+    Эндпоинт возвращает агрегированную статистику по транзакциям за выбранный период
+    с возможностью фильтрации по статусу, типу и дате.
+    Query-параметры:
+        start_date (str, optional): Начало периода (YYYY-MM-DD). По умолчанию — месяц назад.
+        end_date (str, optional): Конец периода (YYYY-MM-DD). По умолчанию — сегодня.
+        status (str): Фильтр по статусу транзакции: 'successful', 'failed', 'all'. По умолчанию 'all'.
+        type (str): Фильтр по типу: 'payment', 'invoice', 'all'. По умолчанию 'all'.
+        include_avg (bool): Включить среднюю сумму. По умолчанию False.
+        include_min (bool): Включить минимальную сумму. По умолчанию False.
+        include_max (bool): Включить максимальную сумму. По умолчанию False.
+        include_daily_shift (bool): Включить данные по дням с % изменением. По умолчанию False.
+    Returns:
+        ReportResponse: Агрегированная статистика по транзакциям.
+    """
     return await report_serv.get_all_report_by_filter(trans_filter)
 
 
