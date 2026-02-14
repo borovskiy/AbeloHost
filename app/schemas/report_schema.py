@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from pydantic import BaseModel, Field, model_validator, field_validator
 from datetime import date, timedelta
-from typing import Optional, List
+from typing import Optional, List, Literal
 
 from starlette import status
 
@@ -25,7 +25,7 @@ class TransactionFilter(BaseModel):
     include_min: bool = False
     include_max: bool = False
     include_daily_shift: bool = False
-
+    full_info_data: bool = False
     @field_validator('start_date', mode='before')
     @classmethod
     def validate_start_date(cls, v):
@@ -68,6 +68,17 @@ class TransactionFilter(BaseModel):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Поля агрегации {enabled_fields} могут быть включены только при status={APITypeStatusEnum.SUCCESSFUL}")
         return self
 
+class CountryStatsFilter(BaseModel):
+    sort_by: Literal["count", "total", "avg"] = Field(
+        default="count",
+        description="Метрика для сортировки: count, total, avg"
+    )
+    top_n: Optional[int] = Field(
+        default=None,
+        description="Ограничение количества стран",
+        ge=1
+    )
+
 class AggregateReport(BaseModel):
     total_amount: Optional[float] = None
     transaction_count: Optional[float] = None
@@ -75,7 +86,23 @@ class AggregateReport(BaseModel):
     min_amount: Optional[float] = None
     max_amount: Optional[float] = None
 
+class CSVData(BaseModel):
+    country: str
+    list_id_user_country: List[int]
 
+class CSVDataList(BaseModel):
+    list_id_for_search: List[int]
+    list_id_data_csv: List[CSVData]
+    list_for_frame_user_country: List[dict]
+
+class CountryStat(BaseModel):
+    country: str
+    transaction_count: int
+    total_amount: float
+    average_amount: float
+
+class CountryReportResponse(BaseModel):
+    stats: List[CountryStat]
 
 class DailyShift(BaseModel):
     date: str

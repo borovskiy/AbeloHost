@@ -1,4 +1,6 @@
+import logging
 from datetime import date, datetime, timezone
+from typing import List, Sequence
 
 from sqlalchemy import select, func, cast, Select, Text, literal_column, case
 
@@ -31,6 +33,12 @@ class TransactionRepository(BaseRepo[TransactionModel]):
             query = query.where(self.trans_model.type == filters.type)
 
         return query
+
+    async def get_trans_user_ids(self, list_id: List[int]) -> Sequence[TransactionModel]:
+        smtp = select(self.trans_model).where(self.trans_model.user_id.in_(list_id))
+        result = await self.session.execute(smtp)
+        daily_data = result.scalars().all()
+        return daily_data
 
     async def get_aggregated_report(self, filters: TransactionFilter) -> AggregateReport:
         # Запрос для агрегации
@@ -65,7 +73,7 @@ class TransactionRepository(BaseRepo[TransactionModel]):
     async def get_daily_shifts(self, filters: TransactionFilter):
         """
         Возвращает ежедневные суммы транзакций с процентным изменением
-        относительно предыдущего дня, используя оконную функцию LAG.
+        относительно предыдущего дня.
         """
         # Применяем фильтры к базовому запросу (это должен быть запрос с WHERE условиями)
         cte_filtered = await self.get_report_by_filter(
@@ -107,7 +115,6 @@ class TransactionRepository(BaseRepo[TransactionModel]):
                 )
             ).label(TransactionFieldEnum.PERCENTAGE_CHANGE.value)
         ).select_from(with_prev).order_by(with_prev.c.day_date)
-
         result = await self.session.execute(final_query)
         daily_data = result.fetchall()
 
@@ -115,5 +122,6 @@ class TransactionRepository(BaseRepo[TransactionModel]):
             date=row.day_date.date().isoformat(),
             total_amount=float(row.daily_total) if row.daily_total else None,
             count=row.daily_count,
-            percent_change=float(row.prev_day_total) if row.prev_day_total else None
+            percent_change=float(row.percentage_change) if row.prev_day_total else None
         ) for row in daily_data]
+
