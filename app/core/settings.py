@@ -13,12 +13,6 @@ class Settings(BaseSettings):
 
     DATABASE_URL: Optional[str] = None
 
-
-
-    class Config:
-        env_file = "app/local.env"
-        env_file_encoding = "utf-8"
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if not self.DATABASE_URL:

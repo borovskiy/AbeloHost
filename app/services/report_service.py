@@ -1,17 +1,12 @@
-from io import StringIO
-from typing import List
-
 from fastapi import Depends
-from pandas import DataFrame
 from sqlalchemy.ext.asyncio import AsyncSession
 import pandas as pd
 
 from app.core.db_connector import get_db
 from app.repo.transaction_repo import TransactionRepository
-from app.schemas.report_schema import TransactionFilter, ReportResponse, DailyShift, CountryStatsFilter, CSVData, \
-    CSVDataList, CountryReportResponse, CountryStat
+from app.schemas.report_schema import TransactionFilter, ReportResponse, CountryStatsFilter, CountryReportResponse, CountryStat
 from app.services.base_services import BaseServices
-from app.services.utils.utils_pandas_frame import read_frame, check_column_in_csv, get_user_id_for_n_countries
+from app.services.utils.utils_pandas_frame import get_user_id_for_n_countries
 
 
 class ReportServices(BaseServices):
