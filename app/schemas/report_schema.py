@@ -91,9 +91,9 @@ class CSVData(BaseModel):
     list_id_user_country: List[int]
 
 class CSVDataList(BaseModel):
-    list_id_for_search: List[int]
-    list_id_data_csv: List[CSVData]
-    list_for_frame_user_country: List[dict]
+    list_id_for_search: List[int] = []
+    list_id_data_csv: List[CSVData] = []
+    list_for_frame_user_country: List[dict] = []
 
 class CountryStat(BaseModel):
     country: str

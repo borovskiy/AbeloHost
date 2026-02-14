@@ -58,7 +58,7 @@ async def get_country_stats(
     # Создание фильтра
     filters = CountryStatsFilter(sort_by=sort_by, top_n=top_n)
     # Вызов сервиса
-    return await report_serv.get_report_countre(
+    return await report_serv.get_report_country(
         countries_csv=file_str,
         filters=filters
     )
