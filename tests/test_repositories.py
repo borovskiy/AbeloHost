@@ -9,7 +9,7 @@ from app.models import TransactionModel
 async def test_get_trans_user_ids(mock_transaction_repo):
     fake_transactions = [
         TransactionModel(user_id=1, sum_pay=Decimal("100.00")),
-        TransactionModel(user_id=2, sum_pay=Decimal("200.00"))
+        TransactionModel(user_id=2, sum_pay=Decimal("200.00")),
     ]
 
     # Перезаписываем мок, установленный в фикстуре

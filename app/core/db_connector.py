@@ -4,9 +4,13 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, Asyn
 from app.core.settings import settings
 
 SessionLocal = async_sessionmaker(
-    bind=create_async_engine(settings.DATABASE_URL, echo=False, ),
+    bind=create_async_engine(
+        settings.DATABASE_URL,
+        echo=False,
+    ),
     expire_on_commit=False,
 )
+
 
 async def get_db():
     async with SessionLocal() as session:
@@ -17,5 +21,3 @@ async def get_db():
             raise
         finally:
             await session.close()
-
-

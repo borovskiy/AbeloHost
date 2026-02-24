@@ -44,7 +44,7 @@ async def initialize_sample_data():
             user = UserModel(
                 email=f"user{i}@example.com",
                 name=f"User {i}",
-                hashed_password=f"hashed_password_{i}"  # В реальном приложении используйте хеширование
+                hashed_password=f"hashed_password_{i}",  # В реальном приложении используйте хеширование
             )
             sample_users.append(user)
         session.add_all(sample_users)
@@ -66,7 +66,9 @@ async def initialize_sample_data():
             # Создаем 100 транзакций для каждого пользователя
             for j in range(100):
                 # Случайная дата в пределах последних 2 лет
-                random_seconds = random.randint(0, int((now - two_years_ago).total_seconds()))
+                random_seconds = random.randint(
+                    0, int((now - two_years_ago).total_seconds())
+                )
                 transaction_date = two_years_ago + timedelta(seconds=random_seconds)
 
                 # Случайная сумма от 1 до 1000
@@ -83,7 +85,7 @@ async def initialize_sample_data():
                     sum_pay=amount,
                     status=status,
                     type=trans_type,
-                    user_id=user.id
+                    user_id=user.id,
                 )
                 sample_transactions.append(transaction)
 
@@ -94,14 +96,18 @@ async def initialize_sample_data():
                 session.add_all(sample_transactions)
                 await session.flush()
                 sample_transactions = []
-                logging.info(f"Обработано {i} пользователей, создано {total_transactions} транзакций")
+                logging.info(
+                    f"Обработано {i} пользователей, создано {total_transactions} транзакций"
+                )
 
         # Добавляем оставшиеся транзакции
         if sample_transactions:
             session.add_all(sample_transactions)
 
         await session.commit()
-        logging.info(f"✅ Успешно создано: 100 пользователей и {total_transactions} транзакций")
+        logging.info(
+            f"✅ Успешно создано: 100 пользователей и {total_transactions} транзакций"
+        )
 
     except Exception as e:
         await session.rollback()

@@ -8,7 +8,7 @@ def test_get_user_id_for_n_countries():
 
     result = get_user_id_for_n_countries(countries_csv=csv_str, filters=filters)
 
-    assert len(result.list_id_for_search )== 3
+    assert len(result.list_id_for_search) == 3
     assert len(result.list_id_data_csv) == 2
     assert result.list_id_data_csv[0].country == "Russia"
     assert result.list_id_data_csv[1].country == "USA"

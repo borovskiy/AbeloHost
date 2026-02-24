@@ -20,14 +20,22 @@ class TransactionModel(BaseModel):
     sum_pay: Mapped[Decimal] = mapped_column(DECIMAL(10, 2), nullable=False)
     status: Mapped[TypeStatusEnum] = mapped_column(Enum(TypeStatusEnum), nullable=False)
     type: Mapped[TypePayEnum] = mapped_column(Enum(TypePayEnum), nullable=False)
-    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("users.id"), nullable=False
+    )
 
     # Relationships
     user: Mapped["UserModel"] = relationship(back_populates="transactions")
 
     __table_args__ = (
-        Index('idx_transactions_status_type_date_user', 'status', 'type', 'date_pay', 'user_id'),
-        Index('idx_transactions_user_id', 'user_id'),
-        Index('idx_transactions_date_pay', 'date_pay'),
-        Index('idx_transactions_sum_pay', 'sum_pay'),
+        Index(
+            "idx_transactions_status_type_date_user",
+            "status",
+            "type",
+            "date_pay",
+            "user_id",
+        ),
+        Index("idx_transactions_user_id", "user_id"),
+        Index("idx_transactions_date_pay", "date_pay"),
+        Index("idx_transactions_sum_pay", "sum_pay"),
     )

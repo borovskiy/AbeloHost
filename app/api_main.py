@@ -12,6 +12,7 @@ async def lifespan(app: FastAPI):
     await initialize_sample_data()
     yield
 
+
 def create_app() -> FastAPI:
     app = FastAPI(lifespan=lifespan, title="Test", version="0.1.0")
     app.include_router(router, prefix="/api/v1")
